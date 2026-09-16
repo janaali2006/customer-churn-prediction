@@ -54,13 +54,10 @@ with st.form("churn_form"):
 if submitted:
     input_df = pd.DataFrame([inputs])
 
-    # One-hot encode categorical columns the same way as during training
     input_encoded = pd.get_dummies(input_df, columns=categorical_columns, drop_first=True)
 
-    # Make sure the columns match exactly what the model was trained on
     input_encoded = input_encoded.reindex(columns=feature_columns, fill_value=0)
 
-    # Scale numerical columns with the same scaler used during training
     input_encoded[numerical_columns] = scaler.transform(input_encoded[numerical_columns])
 
     prediction = model.predict(input_encoded)[0]
@@ -68,6 +65,6 @@ if submitted:
 
     st.divider()
     if prediction == 1:
-        st.error(f"⚠️ This customer is likely to churn. (Churn probability: {probability:.2%})")
+        st.error(f"⚠️ This customer is likely to churn.")
     else:
-        st.success(f"✅ This customer is likely to stay. (Churn probability: {probability:.2%})")
+        st.success(f"✅ This customer is likely to stay.")
